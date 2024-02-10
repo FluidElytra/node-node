@@ -31,20 +31,48 @@ end
 
 function Player:move(direction, mesh)
     if direction == "up" then
-        if self.j > 1 then
-            self.j = self.j - 1
-        end
-    elseif direction == "down" then
-        if self.j < mesh.n_y then
-            self.j = self.j + 1
-        end
-    elseif direction == "left" then
         if self.i > 1 then
             self.i = self.i - 1
         end
-    elseif direction == "right" then
+    elseif direction == "down" then
         if self.i < mesh.n_x then
             self.i = self.i + 1
+        end
+    elseif direction == "left" then
+        if self.j > 1 then
+            self.j = self.j - 1
+        end
+    elseif direction == "right" then
+        if self.j < mesh.n_y then
+            self.j = self.j + 1
+        end
+    end
+end
+
+function Player:rotate(direction, mesh)
+    -- get all the links connected to the player's node
+    local links = {} -- table of links that can be rotated by the player
+    local n_x, n_y = 1, 0 -- reference vector
+    for i, link in pairs(mesh.links) do
+        if link.node1 == self.index or link.node2 == self.index then
+            table.insert(links, link.index)
+        end
+    end
+
+    -- compute the initial angle for each link
+    for i, link in pairs(links) do
+        -- find the vector direction of the link
+        
+    end
+
+    -- rotate those links
+    for i, link in pairs(links) do
+        if direction == "clockwise" then
+            mesh.links[link].state = 'rotate_clockwise'
+            mesh.links[link].command_angle = mesh.links[link].command_angle + math.pi/2
+        elseif direction == "counterclockwise" then
+            mesh.links[link].state = 'rotate_counterclockwise'
+            mesh.links[link].command_angle = mesh.links[link].command_angle - math.pi/2
         end
     end
 end

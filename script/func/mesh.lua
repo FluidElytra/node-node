@@ -1,5 +1,7 @@
 Mesh = Object:extend()
 
+local start_color = {0,255/255,185/255,1}
+
 function Mesh:new(n_x, n_y)
     --[[
     description: instanciates the Mesh object, which is the game board
@@ -14,15 +16,18 @@ function Mesh:new(n_x, n_y)
     local index = 0
     self.n_x = n_x
     self.n_y = n_y
+    self.start = 1 -- set the start node
+    self.arrival = 9 -- set the objective node
+    
 
     -- empty array of nodes
     self.nodes = {}
 
     -- loop over the dimensions to instanciate the nodes
     for i = 1, self.n_x do
-        local x = x_0+(i-1)*step
+        local y = y_0+(i-1)*step
         for j = 1, self.n_y do
-            local y = y_0+(j-1)*step
+            local x = x_0+(j-1)*step
             index = index + 1
 
             -- fill the node array
@@ -46,12 +51,23 @@ function Mesh:new(n_x, n_y)
 			end
 		end
 	end
+
+    -- find a way between the start and the arrival nodes
+
+    -- set up the first level
+    self.links = {}
+    self.links[1] = Link(1, 2, self, 1, 0)
+    self.links[2] = Link(1, 4, self, 2, math.pi/2)
+
 end
 
 function Mesh:update()
     --[[
     description: 
     ]]--
+    for i = 1, #self.links do
+        self.links[i]:update()
+    end
 end
 
 function Mesh:draw()
@@ -59,10 +75,19 @@ function Mesh:draw()
     description: 
     ]]--
 
+    -- draw the links
+    for i = 1, #self.links do
+        self.links[i]:draw()
+    end
+
     -- draw the nodes
     for i = 1, #self.nodes do
+        if i == self.start or i == self.arrival then
+            self.nodes[i].color = start_color
+        end
         self.nodes[i]:draw()
     end
+
 end
 
 function Mesh:ij_to_index(i,j)
