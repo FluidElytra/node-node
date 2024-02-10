@@ -51,28 +51,41 @@ end
 
 function Player:rotate(direction, mesh)
     -- get all the links connected to the player's node
-    local links = {} -- table of links that can be rotated by the player
+    local link_indices = {} -- table of links that can be rotated by the player
+    local rotation_centers = {}
     local n_x, n_y = 1, 0 -- reference vector
     for i, link in pairs(mesh.links) do
-        if link.node1 == self.index or link.node2 == self.index then
-            table.insert(links, link.index)
+        for j, node_index in ipairs(link.node_indices) do
+            if node_index == self.index then
+                table.insert(link_indices, link.index)
+                table.insert(rotation_centers, j)
+            end
         end
     end
 
-    -- compute the initial angle for each link
-    for i, link in pairs(links) do
-        -- find the vector direction of the link
-        
-    end
-
     -- rotate those links
-    for i, link in pairs(links) do
-        if direction == "clockwise" then
-            mesh.links[link].state = 'rotate_clockwise'
-            mesh.links[link].command_angle = mesh.links[link].command_angle + math.pi/2
-        elseif direction == "counterclockwise" then
-            mesh.links[link].state = 'rotate_counterclockwise'
-            mesh.links[link].command_angle = mesh.links[link].command_angle - math.pi/2
+    for i, link_index in pairs(link_indices) do
+        if mesh.links[link_index].state == 'idle' then
+            mesh.links[link_index].rotation_center = rotation_centers[i]
+
+            -- get the link location
+            local directions_x, directions_y = mesh.links[link_index]:compute_direction(mesh)
+            local direction_x = directions_x[rotation_centers[i]]
+            local direction_y = directions_y[rotation_centers[i]]
+            
+            -- dot product to get the angle of the link
+            local angle = math.acos(direction_x)
+
+            -- proceed to the rotation
+            if direction == "clockwise" then
+                mesh.links[link_index].state = 'rotate_clockwise'
+                mesh.links[link_index].command_angle = mesh.links[link_index].command_angle + math.pi/2
+                -- mesh.links[link_index].command_angle = angle + math.pi/2
+            elseif direction == "counterclockwise" then
+                mesh.links[link_index].state = 'rotate_counterclockwise'
+                mesh.links[link_index].command_angle = mesh.links[link_index].command_angle - math.pi/2
+                -- mesh.links[link_index].command_angle = angle - math.pi/2
+            end
         end
     end
 end
@@ -87,3 +100,6 @@ function Player:draw()
     love.graphics.setColor(1,1,1,1)
 end
 
+function compute_link_angle()
+
+end
