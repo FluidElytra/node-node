@@ -68,7 +68,7 @@ function Player:rotate(direction, mesh)
         if mesh.links[link_index].state == 'idle' then
             mesh.links[link_index].rotation_center = rotation_centers[i]
 
-            -- get the link location
+            -- compute the link direction
             local directions_x, directions_y = mesh.links[link_index]:compute_direction(mesh)
             local direction_x = directions_x[rotation_centers[i]]
             local direction_y = directions_y[rotation_centers[i]]
