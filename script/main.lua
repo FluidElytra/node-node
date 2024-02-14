@@ -62,9 +62,9 @@ function love.keypressed(key, unicode)
 	end
 	
 	if key == "a" then
-		player:rotate("clockwise", mesh)
+		player:rotate(-1, mesh)
 	elseif key == 'e' then
-		player:rotate("counterclockwise", mesh)
+		player:rotate(1, mesh)
 	end
 end
 

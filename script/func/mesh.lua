@@ -56,8 +56,8 @@ function Mesh:new(n_x, n_y)
 
     -- set up the first level
     self.links = {}
-    self.links[1] = Link(1, 2, self, 1, 0)
-    self.links[2] = Link(1, 4, self, 2, math.pi/2)
+    self.links[1] = Link(5, 6, self, 1, 0)
+    -- self.links[2] = Link(5, 8, self, 2, math.pi/2)
 
 end
 
@@ -66,7 +66,7 @@ function Mesh:update()
     description: 
     ]]--
     for i = 1, #self.links do
-        self.links[i]:update()
+        self.links[i]:update(self)
     end
 end
 
@@ -92,4 +92,10 @@ end
 
 function Mesh:ij_to_index(i,j)
 	return j + (i-1) * self.n_x
+end
+
+function Mesh:index_to_ij(index)
+	i = math.ceil((index) / self.n_x)
+	j = index - (i-1)*self.n_x
+	return i,j
 end
