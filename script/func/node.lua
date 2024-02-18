@@ -1,6 +1,6 @@
 Node = Object:extend()
 
-local debug = false
+local debug = true
 
 function Node:new(x, y, i, j, index)
     --[[

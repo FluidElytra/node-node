@@ -83,7 +83,7 @@ function Link:rotate(direction, rotating_node_index)
         new_node_index = self:find_new_index(center_index, rotating_index, mesh, direction * math.pi/2)
 
         -- initialize the angle
-        -- angle = self:get_angle(center_index, rotating_index, mesh)
+        self.command_angle = self:get_angle(center_index, rotating_index, mesh)
         local angle = self.command_angle
         animation_angles = {}
         animation_frame = 0
@@ -98,7 +98,6 @@ function Link:rotate(direction, rotating_node_index)
             angle = angle + direction * dtheta
             table.insert(animation_angles, angle)
         end
-        
     end
 end
 
@@ -111,25 +110,6 @@ function Link:draw()
     love.graphics.setLineWidth(20)
     love.graphics.line(self.x[1], self.y[1], self.x[2], self.y[2])
     love.graphics.setColor(1,1,1,1)
-end
-
-function Link:compute_direction(mesh)
-    --[[
-    description: 
-    ]]
-
-    self.directions_x = {}
-    self.directions_y = {}
-
-    -- if the first node is the rotation center
-    self.directions_x[1] = mesh.nodes[self.node_indices[2]].j - mesh.nodes[self.node_indices[1]].j
-    self.directions_y[1] = mesh.nodes[self.node_indices[2]].i - mesh.nodes[self.node_indices[1]].i
-
-    -- if the second node is the rotation center
-    self.directions_x[2] = mesh.nodes[self.node_indices[1]].j - mesh.nodes[self.node_indices[2]].j
-    self.directions_y[2] = mesh.nodes[self.node_indices[1]].i - mesh.nodes[self.node_indices[2]].i
-
-    return self.directions_x, self.directions_y
 end
 
 function Link:find_new_index(center_index, rotating_index, mesh, angle)
@@ -172,8 +152,6 @@ function Link:get_angle(center_index, rotating_index, mesh)
     local i_A, j_A = mesh:index_to_ij(rotating_index)
     local i_PA = i_A - i_P
     local j_PA = j_A - j_P
-    print('i_PA: '..i_PA)
-    print('j_PA: '..j_PA)
     local norm_PA = math.sqrt(i_PA^2 + j_PA^2)
 
     -- coordinates of the n vector, for which theta = 0 rad
@@ -183,5 +161,19 @@ function Link:get_angle(center_index, rotating_index, mesh)
     -- get the angle between n and PA
     local cosinus_theta = (i_n*i_PA + j_n*j_PA) / (norm_n*norm_PA)
 
-    return math.acos(cosinus_theta)
+    if i_PA < 0 then
+        theta = math.acos(cosinus_theta) - math.pi
+        print('hello')
+    else
+        theta = math.acos(cosinus_theta)
+    end    
+
+    print('rotating node = ' .. rotating_index)
+    print('center node = ' .. center_index)
+    print('i_PA = '..i_PA)
+    print('j_PA = '..j_PA)
+    print('theta   = ' .. theta/math.pi .. ' pi')
+    print('---')
+
+    return theta
 end
