@@ -22,10 +22,10 @@ function love.load()
 	-- love.window.setMode( WIND_W, height, flags )
 
 	-- instancier le mesh de jeu
-	mesh = Mesh(3, 3)
+	mesh = Mesh(4, 4)
 
 	-- instancier le joueur
-	player = Player(1, mesh)
+	player = Player(6, mesh)
 end
 
 

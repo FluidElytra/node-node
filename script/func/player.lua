@@ -20,7 +20,6 @@ function Player:update(mesh)
     description: 
     ]]--
     -- compute x, y
-    self.index = mesh:ij_to_index(self.i, self.j)
     self.x = mesh.nodes[self.index].x
     self.y = mesh.nodes[self.index].y
 
@@ -30,22 +29,33 @@ function Player:update(mesh)
 end
 
 function Player:move(direction, mesh)
+    local i_temp = self.i
+    local j_temp = self.j
+
     if direction == "up" then
         if self.i > 1 then
-            self.i = self.i - 1
+            i_temp = self.i - 1
         end
     elseif direction == "down" then
         if self.i < mesh.n_x then
-            self.i = self.i + 1
+            i_temp = self.i + 1
         end
     elseif direction == "left" then
         if self.j > 1 then
-            self.j = self.j - 1
+            j_temp = self.j - 1
         end
     elseif direction == "right" then
         if self.j < mesh.n_y then
-            self.j = self.j + 1
+            j_temp = self.j + 1
         end
+    end
+
+    -- move 
+    index_temp = mesh:ij_to_index(i_temp, j_temp)
+    if mesh.nodes[index_temp].enabled == true then
+        self.i = i_temp
+        self.j = j_temp
+        self.index = index_temp
     end
 end
 

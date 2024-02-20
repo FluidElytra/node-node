@@ -1,6 +1,7 @@
 Node = Object:extend()
 
 local debug = true
+local base_radius = 25
 
 function Node:new(x, y, i, j, index)
     --[[
@@ -14,10 +15,12 @@ function Node:new(x, y, i, j, index)
     self.i = i
     self.j = j
     self.index = index
-    self.radius = 25
     self.color = {1,1,1,1}
     self.neighbors = {} -- table of the indices of the neighbors nodes
     self.connected = {} -- table of the indices of the connected neighbors
+    self.enabled = true
+    self.scale = 1
+    self.radius = base_radius*self.scale
 end
 
 function Node:update()
@@ -30,8 +33,11 @@ function Node:draw()
     --[[
     description: 
     ]]--
-
-    love.graphics.setColor(self.color)
+    if self.enabled == true then
+        love.graphics.setColor(self.color)
+    else
+        love.graphics.setColor(1,1,1,0.3)
+    end
     love.graphics.circle('fill', self.x, self.y, self.radius)
     love.graphics.setColor(1,1,1,1)
 

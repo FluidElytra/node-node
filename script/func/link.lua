@@ -83,7 +83,7 @@ function Link:rotate(direction, rotating_node_index)
         new_node_index = self:find_new_index(center_index, rotating_index, mesh, direction * math.pi/2)
 
         -- initialize the angle
-        self.command_angle = self:get_angle(center_index, rotating_index, mesh)
+        self.command_angle, can_rotate = self:get_angle(center_index, rotating_index, mesh)
         local angle = self.command_angle
         animation_angles = {}
         animation_frame = 0
@@ -163,17 +163,20 @@ function Link:get_angle(center_index, rotating_index, mesh)
 
     if i_PA < 0 then
         theta = math.acos(cosinus_theta) - math.pi
-        print('hello')
     else
         theta = math.acos(cosinus_theta)
-    end    
+    end
+
+    -- check if the rotation will lead to an existing point
+    local can_rotate = true
 
     print('rotating node = ' .. rotating_index)
     print('center node = ' .. center_index)
     print('i_PA = '..i_PA)
     print('j_PA = '..j_PA)
     print('theta   = ' .. theta/math.pi .. ' pi')
+    print('can rotate  = ' .. tostring(can_rotate))
     print('---')
 
-    return theta
+    return theta, can_rotate
 end

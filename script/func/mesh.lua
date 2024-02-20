@@ -10,8 +10,8 @@ function Mesh:new(n_x, n_y)
     ]]--
     
     -- parameters
-    local x_0 = 150
-    local y_0 = 150
+    local x_0 = 75
+    local y_0 = 75
     local step = 150
     local index = 0
     self.n_x = n_x
@@ -32,6 +32,9 @@ function Mesh:new(n_x, n_y)
 
             -- fill the node array
             self.nodes[#self.nodes+1] = Node(x, y, i, j, index)
+            if i == 1 or i == self.n_x or j == 1 or j == n_y then
+                self.nodes[#self.nodes].enabled = false
+            end
         end
     end
 
